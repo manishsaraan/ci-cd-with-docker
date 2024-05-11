@@ -28,3 +28,25 @@ jobs:
 
       - name: Verify push
         run: docker pull manishsaraan/turbo-app:latest
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.SSH_USERNAME}}
+          key: ${{secrets.SSH_KEY}}
+          script: |
+            sudo docker manishsaraan/turbo-app:latest
+            sudo docker stop turbo-app || true
+            sudo docker rm turbo-app || true
+            sudo docker run -d --name turbo-app -p 3000:3000 manishsaraan/turbo-app:latest
+
+            # buildid for tag
+            # sonarquebe
+            # container limit on resource use
+            # docker command main env file
+            # run docker compose in detach mode
+            # setup failover in docker compose
+            # promethius
+            # reverse proxy, nginx 
+            # pass variable in docker compose
